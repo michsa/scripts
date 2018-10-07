@@ -1,0 +1,32 @@
+#!/bin/bash
+
+PASS="-p-"
+FROM_DIR="."
+TO_DIR="."
+
+while getopts ":p:" opt; do
+  case $opt in
+    p)
+      PASS="-p$OPTARG"
+      ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+shift $(expr $OPTIND - 1 )
+
+if [ "$1" ]; then
+  FROM_DIR=$1
+  TO_DIR=$1
+fi
+if [ "$2" ]; then
+  TO_DIR=$2
+fi
+
+eval "find $FROM_DIR -name \"*.rar\" -exec unrar -o- $PASS e {} $TO_DIR \;"

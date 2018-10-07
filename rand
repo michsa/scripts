@@ -1,0 +1,19 @@
+#! /bin/bash
+# important if your default shell 
+# is dash (eg ubuntu 6.10 and up)
+# because it doesn't have $RANDOM
+
+MIN=1
+MAX=1
+
+if [ "$2" ]; then    # 2 args: min, max
+   MAX=$2
+   MIN=$1
+elif [ "$1" ]; then  # one arg: max
+   MAX=$1            # (min assumed 1)
+else
+   echo $RANDOM      # default: echo rand,
+   exit 1            # skip calculation
+fi
+
+echo "$[$RANDOM % ($MAX - $MIN + 1) + $MIN]"

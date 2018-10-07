@@ -1,0 +1,14 @@
+#! /bin/sh
+# open a new xfce-terminal tab (tt) to run a foreground 
+# application. args[0] is the command to run from the 
+# new tab, and args[1..n] are its arguments. the tab is 
+# named after the whole argument string.
+
+cmd="xfce4-terminal --tab"
+
+if [ "$1" ]; then                # check for args
+   cmd=$cmd' --title "$*"'       # set tab title to args
+   command -v "$@" >/dev/null && cmd=$cmd" -x $@"        
+fi             # ^ check that arg[0] can be called 
+               #   with arg[1..n] as its args
+eval "$cmd"                      # execute that mofo
