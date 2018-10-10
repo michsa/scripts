@@ -1,0 +1,122 @@
+#! /bin/bash
+
+# ----------- #
+#  FUNCTIONS  #
+# ----------- #
+
+show_help() {
+  echo "help menu"
+  exit 0
+}
+
+list_profiles() {
+  echo "profile  git_user.name  git_user.email  SSH_git_host"
+  exit 0
+}
+
+# 1: prompt text
+# 2: property; shows if exists, prompts for it otherwise
+# 3: default value to use for the property, if we must prompt
+show_or_prompt() {
+  if [ "$2" ]; then
+    echo "$1: $2" >&2
+    echo "$2"
+  else
+    PROMPT="$1:"
+    if [ "$3" ]; then
+      PROMPT="$PROMPT ($3)"
+    fi
+    read -p "$PROMPT " TEMP
+    if [ "$TEMP" ]; then
+      echo "$TEMP"
+    elif [ "$3" ]; then
+      echo "$3"
+    fi
+  fi
+}
+
+new_profile() {
+  echo -e "\nProfile \"$profile\" not found. Creating new profile...\n"
+  git_name=$(show_or_prompt "user.name" "$git_name")
+  git_email=$(show_or_prompt "user.email" "$git_email")
+  git_user=$(show_or_prompt "Github username" "$git_user" "$profile")
+  git_host=$(show_or_prompt "SSH hostname" "$git_host" "$profile.github.com")
+  echo -e "\nDone! Profile \"$profile\" created."
+}
+
+# -------------- #
+#  PROCESS ARGS  #
+# -------------- #
+
+while getopts ":ln:e:s:u:r:h" opt; do
+  case $opt in
+    l) list_profiles ;;
+    n) git_name="$OPTARG" ;;
+    e) git_email="$OPTARG" ;;
+    s) git_host="$OPTARG" ;;
+    u) git_user="$OPTARG" ;;
+    r) repository="$OPTARG" ;;
+    h) show_help ;;
+    \?)
+      echo "Invalid option: -$OPTARG" >&2
+      exit 1
+      ;;
+    :)
+      echo "Option -$OPTARG requires an argument." >&2
+      exit 1
+      ;;
+  esac
+done
+shift $(expr $OPTIND - 1 )
+
+if [ "$1" ]; then
+  profile="$1"
+else
+  echo ""
+  read -p "Enter a name to save this profile (optional): " profile
+fi
+
+if [ "$profile" ]; then
+  new_profile
+fi
+
+if [ "$git_host" ] && [ "$git_user" ] && [ ! "$repository" ]; then
+  echo ""
+  read -p "Enter the repository name to set up remote SSH (optional): " repository
+fi
+
+
+# --------------- #
+#  CONFIGURE GIT  #
+# --------------- #
+
+if [ "$profile" ]; then
+  echo -e "\nConfiguring repository using profile \"$profile\"..."
+fi
+
+echo ""
+git init
+
+if [ "$git_name" ]; then
+  git config --local user.name "$git_name"
+  echo "Set user.name: $git_name"
+fi
+if [ "$git_email" ]; then
+  git config --local user.email "$git_email"
+  echo "Set user.email: $git_email"
+fi
+if [ "$git_host" ] && [ "$git_user" ] && [ "$repository" ]; then
+  remote="git@$git_host:$git_user/$repository.git"
+  if [ $(git remote) = "origin" ]; then
+    git remote set-url origin "$remote"
+  else
+    git remote add origin "$remote"
+  fi
+  echo "Set remote origin: $remote"
+fi
+
+echo -e "\nDone :)"
+
+# debug
+# echo "profile=$profile | git_name=$git_name | git_email=$git_email | git_user=$git_user | git_host=$git_host | repository=$repository"
+
