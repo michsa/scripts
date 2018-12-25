@@ -262,7 +262,7 @@ fi
 
 if [ "$HOST" ] && [ "$GH_USER" ] && [ ! "$REPOSITORY" ]; then
   echo ""
-  read -p "Enter the repository name to set up remote SSH (optional): " REPOSITORY
+  REPOSITORY=$(show_or_prompt "Enter the repository name to set up remote SSH" "" $(basename `pwd`))
 fi
 
 
