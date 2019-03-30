@@ -9,7 +9,13 @@ DIRECTORY=~/.ginit
 # =========================================================== #
 
 show_help() {
-  echo "Usage: ginit [OPTIONS...] [profile]"
+  echo "Usage: ginit [OPTIONS...] [PROFILE]"
+  echo ""
+  echo -e "Initializes a git repository in the current directory with the given settings,
+which can optionally be saved as a profile.
+
+Profiles are stored in the ~/.ginit/ directory. To remove a profile or any of
+its settings, please delete or modify its file."
   echo ""
   echo -e "  -l, --list\t list all profiles and their properties"
   echo -e "  -h, --help\t show this message"
@@ -19,11 +25,11 @@ show_help() {
   echo "  -e EMAIL"
   echo -e "\t sets git config --local user.email"
   echo "  -s HOSTNAME"
-  echo -e "\t used to autoconfigure an SSH remote origin; sets 'git remote add origin'\n\
-  \t to 'git@HOSTNAME:USERNAME/REPOSITORY.git'"
+  echo -e "\t used to autoconfigure an SSH remote origin; sets 'git remote add origin'
+\t to 'git@HOSTNAME:USERNAME/REPOSITORY.git'"
   echo "  -u USERNAME"
-  echo -e "\t stores a username associated with git repository service like github,\n\
-  \t used to configure the SSH remote"
+  echo -e "\t stores a username associated with git repository service like github,
+\t used to configure the SSH remote"
   echo "  -r REPOSITORY"
   echo -e "\t stores the repository name, used to configure the SSH remote"
   exit 0
@@ -231,8 +237,6 @@ done
 shift $(expr $OPTIND - 1 )
 
 
-  
-
 if [ "$1" ]; then
   PROFILE="$1"
 else
@@ -260,9 +264,15 @@ else
   new_profile
 fi
 
+# prompts for setting up remote SSH
+
 if [ "$HOST" ] && [ "$GH_USER" ] && [ ! "$REPOSITORY" ]; then
   echo ""
-  REPOSITORY=$(show_or_prompt "Enter the repository name to set up remote SSH" "" $(basename `pwd`))
+  read -p "Set up an SSH remote for this repository? (Y/n) " SHOULD_REMOTE
+  if [[ "$SHOULD_REMOTE" =~ ^([yY][eE][sS]|[yY])+$ ]] || ! [ "$SHOULD_REMOTE" ];
+  then
+    REPOSITORY=$(show_or_prompt "Enter the repository name to set up remote SSH" "" $(basename `pwd`))
+  fi
 fi
 
 
