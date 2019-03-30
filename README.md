@@ -1,7 +1,6 @@
 # scripts
 
-A small collection of shell scripts for personal use. You can copy or symlink these to a folder on your `$PATH` to run 'em from anywhere. As [recommended](https://askubuntu.com/a/308048) for user scripts, I use `~/bin`.
-
+A small collection of shell scripts for personal use. You can copy or symlink these to a folder on your `$PATH` to run 'em from anywhere -- I use `~/bin`, which, as far as I understand, is the [recommended option](https://askubuntu.com/a/308048) for user scripts.
 
 
 ## get-ffdev
@@ -27,9 +26,9 @@ ginit [OPTIONS...] [PROFILE]
 
 Automates git initialization with user profiles. Useful if you have multiple Github accounts and you're sick of setting `git config --local` properties every time. `ginit` is able to set the **user.name**, **user.email**, and **SSH remote origin** for your repository.
 
-All arguments are optional. If you don't input a profile name, it will prompt you for one. You can still skip it; `ginit` will then initialize and configure the repository with only the arguments given. If you give it a profile that doesn't exist, `ginit` will create it and then run through the config options NPM-style. If you give it a profile that *does* exist, it will **update it** with whatever other arguments you include, and use the result to configure the repository.
+All arguments are optional. If you don't input a profile name, it will prompt you for one. You can still skip it; `ginit` will then initialize and configure the repository with only the arguments given. If you give it a profile that doesn't exist, `ginit` will create it and then run through the config options NPM-style. If you give it a profile that *does* exist, `ginit` will **update it** with whatever other arguments you include, and use the result to configure the repository.
 
-Profiles are stored in the `~/.ginit` directory. To remove a profile or any of its settings, you must delete or modify its file in `~/.ginit/`.
+Profiles are stored in the `~/.ginit` directory. Currently, `ginit` itself can only create or add to profiles -- to *remove* a profile or any of its settings, you must manually delete or modify its file in `~/.ginit/`.
 
 
 ### Options
