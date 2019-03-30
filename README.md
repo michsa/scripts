@@ -1,6 +1,22 @@
 # scripts
 
-A small collection of shell scripts for personal use. You can copy or symlink these to a folder on your `$PATH` to run 'em. As [recommended](https://askubuntu.com/a/308048) for user scripts, I use `~/bin`.
+A small collection of shell scripts for personal use. You can copy or symlink these to a folder on your `$PATH` to run 'em from anywhere. As [recommended](https://askubuntu.com/a/308048) for user scripts, I use `~/bin`.
+
+
+
+## get-ffdev
+
+```
+get-ffdev [DIR]
+```
+
+Downloads and extracts the latest copy of Firefox Developer Edition into the specified directory. I set this to `~/moz-dev/` by default so I don't have to bother with root, but you can always run it with `sudo` if you want it in a system directory (eg `sudo get-ffdev /opt`).
+
+It creates a `firefox` folder inside the specified directory, so the path to the executable will be `$DIR/firefox/firefox`.
+
+This is an alternative to finagling with `apt` PPAs if you only want Developer Edition for debugging and don't really care about having it as your regular browser. Otherwise, as far as I can tell, the correct PPA is [here](https://launchpad.net/~mozillateam/+archive/ubuntu/firefox-next).
+
+
 
 
 ## ginit

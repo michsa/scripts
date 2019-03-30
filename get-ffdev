@@ -1,0 +1,14 @@
+#! /bin/sh
+
+if [ "$1" ]; then
+  TARGET_DIR=$1
+else
+  TARGET_DIR="~/moz-dev/"
+fi
+
+if [ ! -d $TARGET_DIR ]; then
+  mkdir $TARGET_DIR
+fi
+
+wget -q -O - --trust-server-names "https://download.mozilla.org/?product=firefox-devedition-latest-ssl&os=linux64&lang=en-US" | tar xjv -C "$TARGET_DIR"
+
