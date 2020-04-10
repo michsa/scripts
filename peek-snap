@@ -1,0 +1,46 @@
+#!/bin/bash
+
+PEEK_MARGIN=1
+PEEK_HEADERBAR_HEIGHT=47
+
+# check if we're headless. this is probably really ugly but whatever
+if [ "$1" == "--headless" ]; then
+    HEADERBAR=false
+    COMMAND="peek --no-headerbar"
+else
+    HEADERBAR=true
+    COMMAND="peek"
+fi
+echo "HEADERBAR=$HEADERBAR"
+
+# get window info from xwininfo, since it can tell us our margins
+eval $(xwininfo |
+sed -n -e "s/^ \+Absolute upper-left X: \+\([0-9]\+\).*/ABS_X=\1/p" \
+       -e "s/^ \+Absolute upper-left Y: \+\([0-9]\+\).*/ABS_Y=\1/p" \
+       -e "s/^ \+Relative upper-left X: \+\([0-9]\+\).*/MARGIN_X=\1/p" \
+       -e "s/^ \+Relative upper-left Y: \+\([0-9]\+\).*/MARGIN_Y=\1/p" \
+       -e "s/^ \+Width: \+\([0-9]\+\).*/WIDTH=\1/p" \
+       -e "s/^ \+Height: \+\([0-9]\+\).*/HEIGHT=\1/p" )
+
+# echo "WIDTH=$WIDTH HEIGHT=$HEIGHT"
+# echo "ABS_Y=$ABS_X ABS_Y=$ABS_Y"
+# echo "MARGIN_X=$MARGIN_X MARGIN_Y=$MARGIN_Y"
+# echo "PEEK_MARGIN_X=$PEEK_MARGIN PEEK_MARGIN_Y=$PEEK_MARGIN"
+
+PEEK_WIDTH=$(( $WIDTH + ($PEEK_MARGIN * 2) ))
+PEEK_ABS_X=$(( $ABS_X - $PEEK_MARGIN ))
+
+PEEK_HEIGHT=$(( $HEIGHT + ($PEEK_MARGIN * 2) ))
+PEEK_ABS_Y=$(( $ABS_Y - $PEEK_MARGIN ))
+if $HEADERBAR; then
+   PEEK_HEIGHT=$(( $PEEK_HEIGHT + $PEEK_HEADERBAR_HEIGHT ))
+   PEEK_ABS_Y=$(( $PEEK_ABS_Y - $PEEK_HEADERBAR_HEIGHT ))
+fi
+
+# echo "PEEK_WIDTH=$PEEK_WIDTH PEEK_HEIGHT=$PEEK_HEIGHT"
+# echo "PEEK_ABS_X=$PEEK_ABS_X PEEK_ABS_Y=$PEEK_ABS_Y"
+
+xdotool search --sync --onlyvisible --class peek \
+    windowsize $PEEK_WIDTH $PEEK_HEIGHT \
+    windowmove $PEEK_ABS_X $PEEK_ABS_Y &
+$COMMAND

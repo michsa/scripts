@@ -3,6 +3,7 @@
 A small collection of shell scripts for personal use. You can copy or symlink these to a folder on your `$PATH` to run 'em from anywhere -- I use `~/bin`, which, as far as I understand, is the [recommended option](https://askubuntu.com/a/308048) for user scripts.
 
 
+
 ## get-ffdev
 
 ```
@@ -14,7 +15,6 @@ Downloads and extracts the latest copy of Firefox Developer Edition into the spe
 It creates a `firefox` folder inside the specified directory, so the path to the executable will be `$DIR/firefox/firefox`.
 
 This is an alternative to finagling with `apt` PPAs if you only want Developer Edition for debugging and don't really care about having it as your regular browser. Otherwise, as far as I can tell, the correct PPA is [here](https://launchpad.net/~mozillateam/+archive/ubuntu/firefox-next).
-
 
 
 
@@ -64,6 +64,16 @@ Also used to autoconfigure the remote URL for `origin`. The `USERNAME` and `REPO
 #### `-r REPOSITORY`
 
 Also used to autoconfigure the remote. This one is not saved in the profile; `ginit` will prompt you for it if you don't include it in the command, assuming `USERNAME` and `SSH_HOST` are set.
+
+
+
+## peek-snap
+
+```
+peek-snap [--headless]
+```
+
+For capturing GIF animations of a specific window with [Peek](https://github.com/phw/peek). Captures the dimensions of the first-clicked-on window with `xwininfo`, then opens a Peek instance that is sized and positioned so that its capture area exactly overlaps with the window. The `--headless` flag opens Peek without its header. I bind this to Super-P, but you could also call it through cli if you want to.
 
 
 
