@@ -1,0 +1,18 @@
+#! /bin/sh
+# add, commit, and push all changes to a git repository
+
+dir=${1:-"${PWD}"}
+
+echo $dir
+
+cd "$dir"
+
+d="$(git -C $dir rev-parse 2>/dev/null)" 
+
+if [ "$(git status --short)" != '' ]; then
+	git add .
+	git commit -m "AUTOGIT $(date +%c)"
+	git push -u origin HEAD
+else
+	echo "autogit: no changes to commit on $(pwd)"
+fi
